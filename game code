@@ -1,0 +1,112 @@
+import turtle
+import time
+import random
+
+delay = .1
+
+#Screen
+wind = turtle.Screen()
+wind.title('Snake game')
+wind.bgcolor('black')
+wind.setup(700,400)
+wind.tracer(0)
+
+
+#snake
+snake = turtle.Turtle()
+snake.speed(0)
+snake.color('green')
+snake.penup()
+snake.shape('square')
+snake.goto(150, 0)
+snake.direction = 'stop'
+
+
+#food
+food = turtle.Turtle()
+food.speed(0)
+food.color('white')
+food.penup()
+food.shape('square')
+food.shapesize(.25,.25)
+food.goto(0,0)
+
+#score
+point = 0
+life = 5
+score = turtle.Turtle()
+score.speed(0)
+score.color('white')
+score.penup()
+score.hideturtle()
+score.goto(0, 150)
+score.write('Score: 0    Lives: 5')
+
+#functions for directions
+def snake_up():
+    snake.direction = 'up'
+def snake_down(): 
+    snake.direction = 'down'
+def snake_left(): 
+    snake.direction = 'left'
+def snake_right():
+    snake.direction = 'right'
+
+#functions for moving    
+def move():    
+    if snake.direction == 'up':
+        y = snake.ycor()
+        y += 20
+        snake.sety(y)
+        
+    if snake.direction == 'down':
+        snake.sety(snake.ycor() - 20)
+        
+    
+    if snake.direction == 'left':
+        snake.setx(snake.xcor() - 20)
+    
+    if snake.direction == 'right':
+        snake.setx(snake.xcor() + 20)
+            
+            
+#keyboard   
+wind.listen()
+wind.onkeypress(snake_up, 'Up')
+wind.onkeypress(snake_down, "Down")
+wind.onkeypress(snake_left, "Left")
+wind.onkeypress(snake_right, "Right")
+
+#loop function
+while True:
+    wind.update()
+    if snake.distance(food) < 20:
+        x = random.randint(-300, 300)
+        y = random.randint(-160, 160)
+        food.goto(x, y)
+        point += 1
+        score.clear()
+        score.write("Score: {}".format(point))
+        
+    if snake.xcor()  > 340 or snake.xcor() < -340:
+        snake.goto(0,0)
+        life -= 1
+        score.clear()
+        score.write("lives: {}".format(life))
+        if life == 0:
+            point = 0
+            snake.direction = 'stop'
+            life = 5
+        
+    if snake.ycor() > 190 or snake.ycor() < -190:
+        snake.goto(0, 0)
+        life -= 1
+        score.clear()
+        score.write("lives: {}".format(life))
+        if life == 0:
+            point = 0
+            snake.direction = 'stop'
+            life = 5
+    
+    move()
+    time.sleep(delay)
